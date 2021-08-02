@@ -1,7 +1,5 @@
 import os
-from typing import Dict
 import requests
-import urllib.robotparser
 from bs4 import BeautifulSoup
 
 
@@ -25,19 +23,21 @@ def checkingRobotsTxt(result_data_set):
         if el == var1 or el == var2:
             return False
     return allowed
-        
+
+def gettingBonusDiv():
+    r = requests.get('https://www.ah.nl/bonus')
+    soup = BeautifulSoup(r.content, 'html.parser')
+
+    bonusen = soup.findAll('div', class_='grid_spanFrom-lg-2__1fBvP', recursive=True)
+    for b in bonusen:
+        texts = b.findAll(text=True)
+        print(texts)
+
 
 def main():
     rds = parsingRobotsTxt()
     allowed = checkingRobotsTxt(rds)
-    print(allowed)
+    if allowed:
+        gettingBonusDiv()
 
 main()
-
-# r = requests.get('https://www.ah.nl/bonus')
-# soup = BeautifulSoup(r.content, 'html.parser')
-
-# bonusen = soup.extract('div', class_='grid_spanFrom-lg-2__1fBvP')
-
-# print(type(bonusen))
-# print(type(soup))
