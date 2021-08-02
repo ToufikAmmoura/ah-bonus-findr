@@ -16,4 +16,5 @@ hard mode
  doe notificatie
 
  notes:
- 'https://www.ah.nl/bonus' --> /bonus mag niet in allowed zitten 
+ 'https://www.ah.nl/bonus' --> /bonus mag niet in allowed zitten
+ class van product: link_root__3u9Oq product-card-portrait_link__2ctJY

@@ -28,10 +28,15 @@ def gettingBonusDiv():
     r = requests.get('https://www.ah.nl/bonus')
     soup = BeautifulSoup(r.content, 'html.parser')
 
-    bonusen = soup.findAll('div', class_='grid_spanFrom-lg-2__1fBvP', recursive=True)
-    for b in bonusen:
-        texts = b.findAll(text=True)
-        print(texts)
+    f = open('text.txt', 'w', encoding='utf-8')
+    f.write(str(soup.find_all(text=True)))
+    f.close()
+
+    bonusen = soup.find_all('div', class_='grid_spanFrom-lg-2__1fBvP', recursive=True)
+    
+    f = open('text2.txt', 'w', encoding='utf-8')
+    f.write(str(bonusen.find_all(text=True)))
+    f.close()
 
 
 def main():
