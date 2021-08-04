@@ -39,15 +39,20 @@ def gettingTitles():
             titles.append(title)
     return set(titles)
 
-def main():
+def checkProducts(titles):
     products = ['AH Kleine salades en pastasalades', 'AH Amandeldrink', 'Quaker Havermout']
+    for t in titles:
+        for p in products:
+            if p in t:
+                print(p)
+
+
+def main():
     rds = parsingRobotsTxt()
     allowed = checkingRobotsTxt(rds)
     if allowed:
         ts = gettingTitles()
-        for p in products:
-            if p in ts:
-                print(p)
+        checkProducts(ts)
 
 
 main()
