@@ -1,7 +1,7 @@
 import os
 import requests
+import re
 from bs4 import BeautifulSoup
-
 
 def parsingRobotsTxt():
     result = os.popen("curl -s https://www.ah.nl/robots.txt").read()
@@ -26,13 +26,21 @@ def checkingRobotsTxt(result_data_set):
 
 def gettingBonusDiv():
     r = requests.get('https://www.ah.nl/bonus')
-    soup = BeautifulSoup(r.content, 'html.parser')
-    k = soup.find_all(name='span')
-    print(k)
-
-    # b = soup.find('a', class_='link_root__3u9Oq product-card-portrait_link__2ctJY', recursive=True)
-    # print(b)
-
+    con = str(r.content)
+    occurences = [m.start() for m in re.finditer('"title":', con)]
+    titles = []
+    for o in occurences:
+        s = o + len('"title":') + 1
+        title = ""
+        while con[s] != '"':
+            title += con[s]
+            s += 1
+        if title:
+            titles.append(title)
+    
+    print(len(titles))
+    print(len(set(titles)))
+    print(set(titles))
 
 def main():
     rds = parsingRobotsTxt()
