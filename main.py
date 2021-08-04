@@ -24,7 +24,7 @@ def checkingRobotsTxt(result_data_set):
             return False
     return allowed
 
-def gettingBonusDiv():
+def gettingTitles():
     r = requests.get('https://www.ah.nl/bonus')
     con = str(r.content)
     occurences = [m.start() for m in re.finditer('"title":', con)]
@@ -37,15 +37,17 @@ def gettingBonusDiv():
             s += 1
         if title:
             titles.append(title)
-    
-    print(len(titles))
-    print(len(set(titles)))
-    print(set(titles))
+    return set(titles)
 
 def main():
+    products = ['AH Kleine salades en pastasalades', 'AH Amandeldrink', 'Quaker Havermout']
     rds = parsingRobotsTxt()
     allowed = checkingRobotsTxt(rds)
     if allowed:
-        gettingBonusDiv()
+        ts = gettingTitles()
+        for p in products:
+            if p in ts:
+                print(p)
+
 
 main()
