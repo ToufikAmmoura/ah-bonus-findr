@@ -58,6 +58,7 @@ def main():
     if allowed:
         ts = gettingTitles()
         b = checkProducts(ts)
+        print(b)
 
 
 
