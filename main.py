@@ -41,18 +41,24 @@ def gettingTitles():
 
 def checkProducts(titles):
     products = ['AH Kleine salades en pastasalades', 'AH Amandeldrink', 'Quaker Havermout']
+    bonus = []
     for t in titles:
         for p in products:
             if p in t:
-                print(p)
+                bonus.append(p)
+    return bonus
 
+def sendMail(bonus):
+    message = "These products are in Bonus this week: " + str(bonus)
+    
 
 def main():
     rds = parsingRobotsTxt()
     allowed = checkingRobotsTxt(rds)
     if allowed:
         ts = gettingTitles()
-        checkProducts(ts)
+        b = checkProducts(ts)
+
 
 
 main()
