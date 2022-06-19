@@ -1,42 +1,34 @@
-import os
-import requests
-import re
+import requests as req
+import json
+from datetime import datetime, timedelta
 
-def parseSite():
-    def getTitles(con):
-        occurences = [m.start() for m in re.finditer('"title":', con)]
-        titles = []
-        for o in occurences:
-            s = o + len('"title":') + 1
-            title = ""
-            while con[s] != '"':
-                title += con[s]
-                s += 1
-            if title:
-                titles.append(title.lower())
-        return set(titles)
+def get_date():
+    # getting the date of the monday of this week
+    now = datetime.now()
+    monday = now - timedelta(days = now.weekday())
+    return monday.strftime('%d-%m')
 
-    def getDate(con):
-        index = con.find('t/m')
-        date = con[index-2:index+10]
-        return date
+WISHES = ['ah kleine salades en pastasalades', 'amandeldrink', 'quaker havermout', 'bramen', 'breaker']
 
-    r = requests.get('https://www.ah.nl/bonus')
-    content = str(r.content)
-    return getTitles(content), getDate(content)
-    
-def checkProducts(titles):
-    products = ['ah kleine salades en pastasalades', 'amandeldrink', 'quaker havermout', 'bramen', 'breaker']
-    bonus = []
-    for t in titles:
-        for p in products:
-            if p in t:
-                bonus.append(t.replace('\\', ''))
-    return bonus
+url = 'https://www.ah.nl/gql'
 
-def main():
-    titles, date = parseSite()
-    discount = checkProducts(titles)
-    print(f'Products with a discount for {date}:\n', discount)
+headers = {'client-name':'ah-bonus', 
+    'client-version':'3.195.0', 
+    'Content-Type': 'application/json'
+}
 
-main()
+payload = "{\"query\":\"query bonusSegments($promotionType: BonusPromotionType, $segmentType: BonusSegmentType, $hideVariants: Boolean, $periodStart: String, $periodEnd: String, $orderId: Int, $viewDate: String) {\\n  bonusSegments(\\n    promotionType: $promotionType\\n    segmentType: $segmentType\\n    hideVariants: $hideVariants\\n    periodStart: $periodStart\\n    periodEnd: $periodEnd\\n    orderId: $orderId\\n    viewDate: $viewDate\\n  ) {\\n    title\\n  }\\n}\",\"variables\":{\"segmentType\":\"NEGATE_PREMIUM\",\"hideVariants\":true,\"orderId\":null}}"
+
+page = req.post(headers=headers, data=payload, url=url)
+data = json.loads(page.content)
+discounts = [el['title'].lower() for el in data['data']['bonusSegments']]
+for d in discounts:
+    for w in WISHES:
+        if w in d:
+            print(d)
+
+title = f'bonus-{get_date()}.txt'
+f = open(title, 'w')
+for d in discounts:
+    f.write(d+'\n')
+f.close()
