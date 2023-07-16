@@ -1,6 +1,7 @@
 import requests as req
 import json
 from datetime import datetime, timedelta
+import argparse
 
 def get_date():
     # getting the date of the monday of this week
@@ -21,14 +22,24 @@ payload = "{\"query\":\"query bonusSegments($promotionType: BonusPromotionType, 
 
 page = req.post(headers=headers, data=payload, url=url)
 data = json.loads(page.content)
+print(data)
 discounts = [el['title'].lower() for el in data['data']['bonusSegments']]
 for d in discounts:
     for w in WISHES:
         if w in d:
             print(d)
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-debug', action='store_true')
+args = parser.parse_args()
+
+if args.debug:
+    for d in discounts:
+        print(d)
+
 title = f'bonus-{get_date()}.txt'
 f = open(title, 'w')
 for d in discounts:
     f.write(d+'\n')
 f.close()
+
