@@ -35,6 +35,6 @@ json_data = [
   }
 ]
 
-def get_bonus():
+def get_discounts():
     response = requests.post('https://www.ah.nl/gql', headers=headers, json=json_data)
     return response

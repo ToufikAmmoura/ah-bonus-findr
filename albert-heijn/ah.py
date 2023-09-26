@@ -1,6 +1,6 @@
 import json
 from datetime import datetime, timedelta
-from ah_request import get_bonus
+from ah_request import get_discounts
 
 def get_date():
     # getting the date of the monday of this week
@@ -10,7 +10,7 @@ def get_date():
 
 WISHES = ['ah kleine salades en pastasalades', 'amandeldrink', 'quaker havermout', 'bramen', 'breaker']
 
-response = get_bonus()
+response = get_discounts()
 data = response.json()
 
 with open ('data.json', 'w') as json_file:
