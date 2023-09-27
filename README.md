@@ -25,6 +25,13 @@ simple scripts that scrape some supermarket sites to see what products are in a 
 
 ## lidl
 
+### analysis
+- GET request gets you no content but divs where the article tiles should load contain an attribute 'fulltitle'
+- attribute 'fulltitle' contains the name of the article eventhough the content is not loaded
+
+### method
+- we can grab the fulltitle attributes of the unloaded article tiles with a simple GET request and XPATH
+
 ## todos
 - simplify the albert heijn gql query to only ask the data we need
 - ah request code needs a function that updates the date variables to the ones of this week
