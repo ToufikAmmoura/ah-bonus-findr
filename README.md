@@ -32,6 +32,15 @@ simple scripts that scrape some supermarket sites to see what products are in a 
 ### method
 - we can grab the fulltitle attributes of the unloaded article tiles with a simple GET request and XPATH
 
+## coop
+
+### analysis
+- they use a API call which returns a JSON with the article titles that are in discount
+- API call contains the date of today
+
+### method
+- I can recreate the API call and extract the right data
+
 ## todos
 - simplify the albert heijn gql query to only ask the data we need
 - ah request code needs a function that updates the date variables to the ones of this week
