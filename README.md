@@ -11,9 +11,17 @@ simple scripts that scrape some supermarket sites to see what products are in a 
 
 ## jumbo
 - site does not perform a seperate post request. all the data is seen on the given HTML document
+- have to scroll down for all the content to load
 - using an XPATH of `//h3/a` is enough to get the titles of products
 
 ## aldi
+- aldi is crazy. they perform a GET request for every separate article tile on the page
+- unloaded divs contain a 'data-tile-url' with the data of the article tile
+
+### method
+- using a GET request to get HTML page with discount articles
+- extracting data-tile-url's with XPATH
+- using GET requests to get the HTML of these pages and extract the article title with XPATH again
 
 ## lidl
 
