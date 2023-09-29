@@ -41,6 +41,13 @@ simple scripts that scrape some supermarket sites to see what products are in a 
 ### method
 - I can recreate the API call and extract the right data
 
+## plus
+
+### analysis
+- plus is blocking any request I'm sending and telling me I'm a bot
+
+### method
+
 ## todos
 - simplify the albert heijn gql query to only ask the data we need
 - ah request code needs a function that updates the date variables to the ones of this week
