@@ -5,9 +5,6 @@ from lxml import html
 
 response = requests.get('https://www.aldi.nl/aanbiedingen.html')
 
-with open('aldi.html', 'w') as file:
-  file.write(response.text)
-
 tree = html.fromstring(response.content)
 elements = tree.xpath('//div[contains(@data-tile-url, "") and contains(@class, "article")]/@data-tile-url')
 
@@ -29,7 +26,6 @@ async def main():
   tasks = [fetch_url(url) for url in article_urls]
   results = await asyncio.gather(*tasks)
   return results
-
 
 if __name__ == '__main__':
   results = asyncio.run(main())

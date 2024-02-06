@@ -1,8 +1,15 @@
 import requests
+from datetime import datetime, timedelta
 
-response = requests.get('https://api.microservice.coop.nl/offers/?formula=FULL&_date=2023-09-27')
+def get_monday_date():
+  today = datetime.now()
+  monday = today - timedelta(days=today.weekday())
+  return monday.strftime("%Y-%m-%d")
+
+
+url = 'https://api.microservice.coop.nl/offers/?formula=FULL&_date=' + get_monday_date()
+response = requests.get(url)
 data = response.json()
 
-print(len(data))
 for article in data:
   print(article['name'])
