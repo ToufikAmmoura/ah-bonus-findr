@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import json
 
 def driver_setup():
   options = Options()
@@ -10,24 +11,56 @@ def driver_setup():
   driver = webdriver.Chrome(options=options)
   return driver
 
+def get_title(card):
+  title_element = card.find_element(By.XPATH, './/p[@data-testhook="card-title"]/span')
+  title = title_element.text
+  return title
+
+def get_promotion(card):
+  promotion = None
+  try:
+    promotion_element = card.find_element(By.XPATH, './/p[@data-testhook="promotion-shield"]')
+    promotion = promotion_element.text.replace('\n', ' ')
+  except:
+    print("Product has no promotion card")
+
+  return promotion
+  
+def get_prices(card):
+  old_price, new_price = None, None
+  try:
+    price_element = card.find_element(By.XPATH, './/div[@data-testhook="price"]')
+    old_price = price_element.get_attribute('data-testpricewas')
+    new_price = price_element.get_attribute('data-testpricenow')
+  except:
+    print("Product has no price change")
+
+  return old_price, new_price
+
 def get_discounted_products(driver):
+  data = []
+
   driver.get('https://www.ah.nl/bonus')
 
   wait = WebDriverWait(driver, 10)
-  cards = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class, "card-content")]')))
+  cards = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-testhook="card"]')))
 
   for card in cards:
-    title_element = card.find_element(By.XPATH, ".//p[@data-testhook='card-title']/span")
-    title = title_element.text
-    print(f"\n{title}")
+    card_data = {}
+    
+    title = get_title(card)
+    promotion = get_promotion(card)
+    old_price, new_price = get_prices(card)
 
-    try:    
-      price_element = card.find_element(By.XPATH, ".//div[@data-testhook='price']")
-      data_testpricewas = price_element.get_attribute("data-testpricewas")
-      data_testpricenow = price_element.get_attribute("data-testpricenow")
-      print(f"Was: {data_testpricewas}\tNow: {data_testpricenow}")
-    except:
-      print("Product has no price change")
+    card_data["title"] = title
+    card_data["promotion"] = promotion
+    card_data["old price"] = old_price
+    card_data["new price"] = new_price
+
+    data.append(card_data)
+
+  with open('albert-heijn.json', 'w') as file:
+    json.dump(data, file)
 
   driver.quit() 
 
