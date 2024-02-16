@@ -3,7 +3,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import json
 
 def driver_setup():
   options = Options()
@@ -41,7 +40,6 @@ def get_discounted_products(driver):
   data = []
 
   driver.get('https://www.ah.nl/bonus')
-
   wait = WebDriverWait(driver, 10)
   cards = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-testhook="card"]')))
 
@@ -59,11 +57,10 @@ def get_discounted_products(driver):
 
     data.append(card_data)
 
-  with open('albert-heijn.json', 'w') as file:
-    json.dump(data, file)
-
-  driver.quit() 
+  driver.quit()
+  return data
 
 def main():
   driver = driver_setup()
-  get_discounted_products(driver)
+  data = get_discounted_products(driver)
+  return data
