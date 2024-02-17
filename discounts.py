@@ -1,8 +1,12 @@
 import json
+from datetime import date
+import os
+
 import albert_heijn
 import jumbo
 import aldi
 import coop
+import lidl
 
 def save_data(filename, data):
   with open(filename, 'w') as file:
@@ -12,9 +16,15 @@ supermarkets = {
   'albert-heijn': albert_heijn.main,
   'jumbo': jumbo.main,
   'aldi': aldi.main,
-  'coop': coop.main
+  'coop': coop.main,
+  'lidl': lidl.main
 }
 
 for name, main_function in supermarkets.items():
   data = main_function()
-  save_data(f'{name}.json', data)
+  
+  today_date = date.today().strftime('%d-%m-%Y')
+  new_dir_path = f'discount_data/{today_date}'
+  os.makedirs(new_dir_path, exist_ok=True)
+  
+  save_data(f'discount_data/{today_date}/{name}.json', data)
