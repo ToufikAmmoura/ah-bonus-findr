@@ -1,6 +1,7 @@
 import json
 import albert_heijn
 import jumbo
+import aldi
 
 def save_data(filename, data):
   with open(filename, 'w') as file:
@@ -12,5 +13,5 @@ save_data('albert-heijn.json', ah_data)
 jumbo_data = jumbo.main()
 save_data('jumbo.json', jumbo_data)
 
-
-
+aldi_data = aldi.main()
+save_data('aldi.json', aldi_data)
