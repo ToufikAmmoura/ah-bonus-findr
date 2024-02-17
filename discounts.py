@@ -7,6 +7,7 @@ import jumbo
 import aldi
 import coop
 import lidl
+import dirk
 
 def save_data(filename, data):
   with open(filename, 'w') as file:
@@ -17,7 +18,8 @@ supermarkets = {
   'jumbo': jumbo.main,
   'aldi': aldi.main,
   'coop': coop.main,
-  'lidl': lidl.main
+  'lidl': lidl.main,
+  'dirk': dirk.main
 }
 
 for name, main_function in supermarkets.items():
