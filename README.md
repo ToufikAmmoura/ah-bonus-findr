@@ -1,54 +1,39 @@
 # discount-scraper
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-simple scripts that scrape some supermarket sites to see what products are in a discount at the moment. not a lot of functionality, it's mainly a project to figure out what techniques the different sites use with some simple reverse engineering for fun.
 
-## albert heijn
+Simple scripts that scrape some supermarket sites to see what products are in a discount at the moment. It grabs the titles, old prices and new prices of the products with a discount. Not a lot of functionality, it's mainly a project to figure out what techniques the different sites use with some simple reverse engineering for fun.
 
-### analysis
-- performs a gql request to `https://www.ah.nl/gql`
-- `periodStart` and `periodEnd` need to be changed to get the discounts of the current week
-- returns a json object where the `titles` are the products that contain a discount
 
-## jumbo
-- site does not perform a seperate post request. all the data is seen on the given HTML document
-- have to scroll down for all the content to load
-- using an XPATH of `//h3/a` is enough to get the titles of products
+## Requirements
 
-## aldi
-- aldi is crazy. they perform a GET request for every separate article tile on the page
-- unloaded divs contain a 'data-tile-url' with the data of the article tile
+- Python3
+- Chrome Webdriver
 
-### method
-- using a GET request to get HTML page with discount articles
-- extracting data-tile-url's with XPATH
-- using GET requests to get the HTML of these pages and extract the article title with XPATH again
+## Usage
 
-## lidl
+```python
+python3 discounts.py
+```
 
-### analysis
-- GET request gets you no content but divs where the article tiles should load contain an attribute 'fulltitle'
-- attribute 'fulltitle' contains the name of the article eventhough the content is not loaded
+## How it works
 
-### method
-- we can grab the fulltitle attributes of the unloaded article tiles with a simple GET request and XPATH
+### Albert Heijn
+In the past I could access their API through a GraphQL request but they disabled that option. So now I use `selenium`, grab the product cards and extract the needed attributes out of them.
 
-## coop
+### Jumbo
+Similar `selenium` solution as Albert Heijn.
 
-### analysis
-- they use a API call which returns a JSON with the article titles that are in discount
-- API call contains the date of today
+### Aldi
+Aldi is a fun one. We use a simple `GET` request to get the discount page, this doesn't contain anything except a bunch of url-paths to the products in a discount. Performing a GET request with `aldi.nl` as base-url and adding the url-path will retrieve a site with the attributes of the discounted product. Here we extract the needed elements with `lxml`.
 
-### method
-- I can recreate the API call and extract the right data
+The fun part is that since we're performing so many `GET` request it's way too slow doing them one by one. So parallelization came to the rescue. Using `asyncio` and `aiohttp` I get the product attributes of more than 100 products in less than 2 seconds!
 
-## plus
+### Coop
+Coop was the quickest. A simple GET request returns a nice `json` file with several product attributes. We grab what we need and go on.
 
-### analysis
-- plus is blocking any request I'm sending and telling me I'm a bot
+### Lidl
+A simple site where we grab the HTML with `requests` and parse it with `lxml`
 
-### method
-
-## todos
-- simplify the albert heijn gql query to only ask the data we need
-- ah request code needs a function that updates the date variables to the ones of this week
-- create a general script that runs all the request scripts of the different sites
+### Dirk
+Another site where `selenium` was the only way to get the product attributes
